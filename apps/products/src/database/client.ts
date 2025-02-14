@@ -2,7 +2,6 @@ import { Pool } from "pg"
 import { PgConfig } from "../config"
 import { DI } from "../di"
 import { Provider } from "@nestjs/common"
-import { applyMigrations } from "./apply-migrations"
 
 const createPgClient = async (pgConfig: PgConfig) => {
   const pool = new Pool({
@@ -17,8 +16,6 @@ const createPgClient = async (pgConfig: PgConfig) => {
   const client = await pool.connect()
 
   client.release();
-
-  await applyMigrations(client)
 
   return client
 }
