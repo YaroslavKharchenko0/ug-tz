@@ -1,6 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { Product } from "../../..";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { ApiOperation, ApiQuery, ApiResponse } from "@nestjs/swagger";
+import { PaginationQueryDocs } from "./pagination";
 
 export const productExample: Product = {
   id: 1,
@@ -30,5 +31,10 @@ export const DeleteProductDocs = () => {
 export const FindProductsDocs = () => {
   return applyDecorators(
     ApiOperation({ summary: 'Find products', description: 'Find products' }),
+    ApiQuery({
+      name: 'pagination',
+      required: false,
+      type: PaginationQueryDocs,
+    }),
     ApiResponse({ status: 200, description: 'Products found', isArray: true, example: [productExample] }));
 }

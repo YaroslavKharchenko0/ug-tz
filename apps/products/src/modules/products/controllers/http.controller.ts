@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Inject, Param, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Inject, Param, Post, Query } from "@nestjs/common";
 import { ProductServiceImpl, ProductService } from "../services";
 import { CreateProductDto, FindProductQueryDto } from "../dtos";
 import { CreateProductDocs, DeleteProductDocs, FindProductsDocs, IsStringNumberPipe } from "@app/shared";
@@ -16,6 +16,7 @@ export class HttpController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
   @DeleteProductDocs()
   async deleteProduct(@Param('id', IsStringNumberPipe) id: number) {
     return this.productService.deleteProduct({ id });

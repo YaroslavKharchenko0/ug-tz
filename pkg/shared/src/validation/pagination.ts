@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const offset = z.number().int().min(0).optional().default(0);
 
-export const limit = z.number().int().positive().optional().default(10);
+export const limit = z.number().int().positive().max(100).optional().default(10);
 
 export const paginationValidationSchema = z.object({
   offset: z
