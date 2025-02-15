@@ -5,6 +5,7 @@ import { AppConfig } from './config';
 import { DI } from './di';
 import { createSwagger } from '@app/shared';
 import { applyMigrations } from './database/apply-migrations';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 async function bootstrap() {
   const context = await NestFactory.createApplicationContext(AppModule);
@@ -14,6 +15,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   createSwagger(app);
+
+  app.useGlobalPipes(new ZodValidationPipe())
 
   await app.listen(appConfig.port, appConfig.host);
 

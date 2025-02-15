@@ -1,5 +1,5 @@
 import { CreateProduct, DeleteProduct, Pagination, Product } from "@app/shared";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { PgProductRepository, ProductRepository } from "../repositories";
 
 export interface FindProducts {
@@ -20,7 +20,11 @@ export class ProductServiceImpl implements ProductService {
     return this.repository.createProduct(input);
   }
   async deleteProduct(input: DeleteProduct): Promise<void> {
-    await this.repository.deleteProduct(input);
+    const result = await this.repository.deleteProduct(input);
+
+    if (result.affectedRows === 0) {
+      throw new NotFoundException('Product not found');
+    }
   }
   findProducts(input: FindProducts): Promise<Product[]> {
     return this.repository.findProducts(input);

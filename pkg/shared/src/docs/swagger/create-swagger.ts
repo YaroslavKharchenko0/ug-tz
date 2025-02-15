@@ -9,7 +9,6 @@ export const createSwagger = (
 
   builder.setTitle('API');
   builder.setDescription('API description');
-  builder.addBearerAuth();
 
   patchNestJsSwagger();
 

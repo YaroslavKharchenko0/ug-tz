@@ -15,8 +15,6 @@ const createPgClient = async (pgConfig: PgConfig) => {
 
   const client = await pool.connect()
 
-  client.release();
-
   return client
 }
 
