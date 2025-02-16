@@ -29,7 +29,9 @@ export class PgProductRepository implements ProductRepository {
       [name, price]
     );
 
-    const [product] = rows;
+    const [product] = rows || [];
+
+    if (!product) return null;
 
     return ProductModel.fromEntity(product);
   }
