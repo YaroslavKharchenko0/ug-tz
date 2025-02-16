@@ -4,7 +4,7 @@ import type { Config } from 'drizzle-kit';
 
 const schemaPath = resolve(__dirname, 'schema.ts');
 
-const migrationsPath = 'apps/products/migrations';
+const migrationsPath = resolve(__dirname, '..', 'products', 'migrations');
 
 const certPath = process.env.RDS_COMBINED_CA_BUNDLE;
 
