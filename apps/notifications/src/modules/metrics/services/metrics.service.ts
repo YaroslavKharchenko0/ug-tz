@@ -8,6 +8,7 @@ export type IncrementEvent = {
 
 export interface MetricsService {
   incrementCount(event: IncrementEvent): void;
+  getMetrics(): Promise<string>;
 }
 
 export class PrometheusMetricsService implements MetricsService {
@@ -53,5 +54,9 @@ export class PrometheusMetricsService implements MetricsService {
     }
 
     counter.inc();
+  }
+
+  getMetrics(): Promise<string> {
+    return this.register.metrics();
   }
 }

@@ -1,18 +1,16 @@
 import { Provider } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DI } from '../di'
-import { RmqOptions, Transport } from "@nestjs/microservices";
 
-export type AppConfig = RmqOptions
+export type AppConfig = {
+  host: string
+  port: number
+}
 
 export const createAppConfig = (configService: ConfigService): AppConfig => {
   return {
-    transport: Transport.RMQ,
-    options: {
-      urls: configService.get<string[]>('RMQ_URLS'),
-      queue: configService.get<string>('RMQ_QUEUE'),
-      exchange: configService.get<string>('RMQ_EXCHANGE'),
-    }
+    host: configService.get<string>('HOST', '0.0.0.0'),
+    port: Number(configService.get<string>('PORT', '3000')),
   }
 }
 
