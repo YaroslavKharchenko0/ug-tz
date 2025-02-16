@@ -7,7 +7,12 @@ const DATABASE = {
   CLIENT: Symbol('DATABASE_CLIENT'),
 }
 
+const NOTIFICATION = {
+  CLIENT: Symbol('NOTIFICATION_CLIENT'),
+}
+
 export const DI = {
   APP,
   DATABASE,
+  NOTIFICATION,
 }
