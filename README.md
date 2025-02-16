@@ -87,7 +87,7 @@ nx test products
 ## Technologies Used
 - **Programming Language:** TypeScript
 - **Framework:** NestJS
-- **Database:** PostgreSQL (raw SQL queries with migrations)
+- **Database:** PostgreSQL (raw SQL queries with migrations), Drizzle ORM - migrations
 - **Metrics:** Prometheus
 - **Messaging Broker:** RabbitMQ
 - **Containerization:** Docker, Docker Compose
