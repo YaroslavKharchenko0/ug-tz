@@ -1,6 +1,9 @@
-import { CreateProduct, DeleteProduct, Pagination, Product } from "@app/shared";
+import { CreateProduct, CreateProductEvent, DeleteProduct, DeleteProductEvent, Pagination, Product } from "@app/shared";
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { PgProductRepository, ProductRepository } from "../repositories";
+import { DI } from "../../../di";
+import { ClientProxy } from "@nestjs/microservices";
+import { firstValueFrom } from "rxjs";
 
 export interface FindProducts {
   pagination: Pagination;
@@ -14,17 +17,28 @@ export interface ProductService {
 
 @Injectable()
 export class ProductServiceImpl implements ProductService {
-  constructor(@Inject(PgProductRepository) private readonly repository: ProductRepository) { }
+  constructor(
+    @Inject(PgProductRepository) private readonly repository: ProductRepository,
+    @Inject(DI.NOTIFICATION.CLIENT) private readonly notificationClient: ClientProxy
+  ) { }
 
   async createProduct(input: CreateProduct): Promise<Product | null> {
-    return this.repository.createProduct(input);
+    const product = await this.repository.createProduct(input);
+
+    if (product) {
+      await firstValueFrom(this.notificationClient.emit(CreateProductEvent.topic, CreateProductEvent.createPayload(product)));
+    }
+
+    return product;
   }
   async deleteProduct(input: DeleteProduct): Promise<void> {
-    const result = await this.repository.deleteProduct(input);
+    const product = await this.repository.deleteProduct(input);
 
-    if (result.affectedRows === 0) {
+    if (!product) {
       throw new NotFoundException('Product not found');
     }
+
+    await firstValueFrom(this.notificationClient.emit(DeleteProductEvent.topic, DeleteProductEvent.createPayload(product)));
   }
   findProducts(input: FindProducts): Promise<Product[]> {
     return this.repository.findProducts(input);
