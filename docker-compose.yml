@@ -8,14 +8,16 @@ services:
     ports:
       - "5432:5432"
     environment:
-       - POSTGRES_DB=products
-       - POSTGRES_USER=postgres
-       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=products
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
   rmq:
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
+
   prometheus:
     image: prom/prometheus:latest
     volumes:
@@ -23,6 +25,40 @@ services:
     ports:
       - "9090:9090"
 
+  products:
+    build:
+      context: .
+      dockerfile: apps/products/Dockerfile
+    environment:
+      - PORT=4000
+      - DATABASE_HOST=products-db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=products
+      - DATABASE_SSL=false
+      - NOTIFICATION_RMQ_URLS=amqp://guest:guest@rmq:5672
+      - NOTIFICATION_RMQ_QUEUE=notifications
+      - NOTIFICATION_RMQ_EXCHANGE=notifications
+    ports:
+      - "4000:4000"
+    depends_on:
+      - products-db
+      - rmq
+
+  notifications:
+    build:
+      context: .
+      dockerfile: apps/notifications/Dockerfile
+    environment:
+      - PORT=3000
+      - RMQ_URLS=amqp://guest:guest@rmq:5672
+      - RMQ_QUEUE=notifications
+      - RMQ_EXCHANGE=notifications
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rmq
 
 volumes:
   postgres_data:
