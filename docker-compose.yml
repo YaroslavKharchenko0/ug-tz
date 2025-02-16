@@ -11,6 +11,22 @@ services:
        - POSTGRES_DB=products
        - POSTGRES_USER=postgres
        - POSTGRES_PASSWORD=postgres
+  rmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
 
 
 volumes:
