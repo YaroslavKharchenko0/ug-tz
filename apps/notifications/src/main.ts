@@ -12,7 +12,7 @@ async function bootstrap() {
 
   const microserviceConfig: MicroserviceConfig = app.get(DI.MICROSERVICE.CONFIG);
 
-  app.connectMicroservice<MicroserviceOptions>(microserviceConfig);
+  app.connectMicroservice<MicroserviceOptions>(microserviceConfig, { inheritAppConfig: true });
 
   await app.startAllMicroservices();
 
